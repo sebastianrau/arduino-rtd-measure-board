@@ -1,0 +1,11 @@
+RTDBoard	KEYWORD1
+readAllValues	KEYWORD2
+toString	KEYWORD2
+getIref	KEYWORD2
+getUref	KEYWORD2
+getUrx	KEYWORD2
+getRx	KEYWORD2
+getUout	KEYWORD2
+getUrefRangemv	KEYWORD2
+getUrxRangemv	KEYWORD2
+getError	KEYWORD2
