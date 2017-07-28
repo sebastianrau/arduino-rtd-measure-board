@@ -4,7 +4,7 @@
 
 int  RTDBoard::MAX_GAIN_NUMBER = 6;
 
-
+double RTDBoard::MIN_UREF_VOLTAGE = 10.0;
 
 
 int RTDBoard::GAIN_VOLTAGE[] {
@@ -41,7 +41,7 @@ double RTDBoard::readAdcUOut_AutoGain() {
   int i;
   for (i = 0; i < MAX_GAIN_NUMBER ; i++) {
     adc.setGain(GAIN_REGISTER[i]);
-    val = adc.readADC_SingleEnded_mv(0);
+        val = (double)adc.getGainMV() * (double)((int16_t)adc.readADC_SingleEnded(0)) / 32767.0;
     if ( i == MAX_GAIN_NUMBER || val >= GAIN_VOLTAGE[i + 1]) {
       return val;
     }
@@ -55,6 +55,7 @@ double RTDBoard::readAdcUref_AutoGain() {
   for (i = 0; i < MAX_GAIN_NUMBER ; i++) {
     adc.setGain(GAIN_REGISTER[i]);
     val = adc.readADC_Differential_0_1_mv();
+	val = (double)adc.getGainMV() * (double)((int16_t)adc.readADC_Differential_0_1()) / 32767.0;
     if ( i == MAX_GAIN_NUMBER || val >= GAIN_VOLTAGE[i + 1]) {
       return val;
     }
@@ -67,7 +68,7 @@ double RTDBoard::readAdcUrx_AutoGain() {
   int i;
   for (i = 0; i < MAX_GAIN_NUMBER ; i++) {
     adc.setGain(GAIN_REGISTER[i]);
-    val = adc.readADC_SingleEnded_mv(2);
+    val = (double)adc.getGainMV() * (double)((int16_t)adc.readADC_SingleEnded(2)) / 32767.0;
     if ( i == MAX_GAIN_NUMBER || val >= GAIN_VOLTAGE[i + 1]) {
       return val;
     }
@@ -81,17 +82,19 @@ void RTDBoard::readAllValues(int channel) {
   //read U0
   data[channel].uOut           = readAdcUOut_AutoGain();
   data[channel].uOutRangemv    = adc.getGainMV();
+  delay(25);
 
   //read uRef
   data[channel].uRef         = readAdcUref_AutoGain();
   data[channel].uRefRangemv  = adc.getGainMV();
-
+delay(25);	
   //read uRx
   data[channel].uRx          = readAdcUrx_AutoGain();
   data[channel].uRxRangemv  = adc.getGainMV();
+delay(25);
 
 
-if(data[channel].uRef > 0.1){
+if(data[channel].uRef > MIN_UREF_VOLTAGE){
   // calc Rx
   data[channel].iRef =  data[channel].uRef * 1000.0f / REFERENCE_RESISTOR_VALUE;
   data[channel].rx   =  data[channel].uRx / data[channel].iRef * 1000.0f  ;
@@ -119,7 +122,6 @@ String RTDBoard::toString() {
   out += "uOut\t";
   out += "Range\t";
   out += "iRef\t";
-  out += "iRefMin\t";
   out += "uRef\t";
   out += "Range\t";
   out += "uRx\t";
@@ -138,7 +140,6 @@ String RTDBoard::toString() {
     out += data[i].uOutRangemv;
     out += ")\t";
     out += data[i].iRef;
-    out += "\t0.5";
     out += "\t";
     out += data[i].uRef;
     out += "\t(";

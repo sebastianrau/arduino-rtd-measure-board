@@ -32,6 +32,7 @@ class RTDBoard {
     static int GAIN_VOLTAGE[];
     static adsGain_t GAIN_REGISTER[];
     static int MAX_GAIN_NUMBER;
+	static double MIN_UREF_VOLTAGE;
 
     static double A;
     static double B;
