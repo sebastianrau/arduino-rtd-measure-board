@@ -4,10 +4,10 @@
 #include <ResistorMeasureBoardIO.h>
 
 
-RTDBoard_IO rtdBoardIO(REFERENCE_RESISTOR_NTC,4,5);
+RTDBoard_IO rtdBoardIO(REFERENCE_RESISTOR_NTC,D6,D7);
 
 unsigned long previousMillis = 0;
-const long interval = 5000;
+const long interval = 1000;
 
 
 void setup ( void ) {
@@ -28,4 +28,3 @@ void loop ( void ) {
 
   
 }
-

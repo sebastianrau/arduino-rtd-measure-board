@@ -27,7 +27,7 @@ void RTDBoard_PCF::begin() {
 int RTDBoard_PCF::selectChannel(int channel) {
   if ( channel >= 0 && channel < CHANNEL_COUNT) {
     mux.write8(SLECT_MUX[channel]);
-    delay(20);
+    delay(100);
     return channel;
   }
   return -1;
